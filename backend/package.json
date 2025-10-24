@@ -6,7 +6,7 @@
     "mysql2": "^3.15.3"
   },
   "scripts": {
-  "start": "node src/main.js",
-  "dev": "nodemon src/main.js"
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js"
   }
 }
