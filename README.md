@@ -48,7 +48,7 @@ Diseño e implementación de la estructura de base de datos MySQL compartida:
 
 ### 💻 Desarrolladoras Backend
 - [@daianayb](https://github.com/daianayb)
-- [@moritatech](https://github.com/moritatech)
+- [@Moratech](https://github.com/Moratech)
 
 ### 🎨 Desarrolladores Frontend
 - *Pendiente de asignación*
