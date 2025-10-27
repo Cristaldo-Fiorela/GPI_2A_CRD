@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InnovaTech - Panel de Integrantes</title>
+  <link rel="stylesheet" href="style2.css"/>
+</head>
+<body>
+  <header class="barra-superior">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_placeholder.svg" alt="Logo InnovaTech">
+      <h1>InnovaTech</h1>
+    </div>
+    <div class="usuario">
+      <img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto de usuario" class="foto-usuario">
+      <span class="nombre-usuario">Jane Doe</span>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="barra-lateral">
+      <nav class="menu">
+        <a href="#" class="menu-item activo">👥 Integrantes</a>
+        <a href="#" class="menu-item">💬 Mensajes</a>
+      </nav>
+    </aside>
+
+    <div class="contenedor">
+      <main class="contenido">
+        <section class="tabla-integrantes tarjeta-neon">
+          <h2>Listado de Integrantes</h2>
+
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto" class="avatar"></td>
+                <td>Jane Doe</td>
+                <td>jane.doe@innovatech.com</td>
+                <td class="acciones">
+                  <button class="btn btn-editar">Editar</button>
+                  <button class="btn btn-eliminar">Eliminar</button>
+                </td>
+              </tr>
+              <tr>
+                <td><img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto" class="avatar"></td>
+                <td>John Smith</td>
+                <td>john.smith@innovatech.com</td>
+                <td class="acciones">
+                  <button class="btn btn-editar">Editar</button>
+                  <button class="btn btn-eliminar">Eliminar</button>
+                </td>
+              </tr>
+              <tr>
+                <td><img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto" class="avatar"></td>
+                <td>Alice Johnson</td>
+                <td>alice.johnson@innovatech.com</td>
+                <td class="acciones">
+                  <button class="btn btn-editar">Editar</button>
+                  <button class="btn btn-eliminar">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="contenedor-boton">
+            <button class="btn btn-primario">+ Nuevo Integrante</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
