@@ -51,7 +51,8 @@ Diseño e implementación de la estructura de base de datos MySQL compartida:
 - [@Moratech](https://github.com/Moratech)
 
 ### 🎨 Desarrolladores Frontend
-- *Pendiente de asignación*
+- [@NuriaGraef](https://github.com/NuriaGraef)
+- [@Santilev](https://github.com/Santilev)
 
 ## 🔧 Tecnologías Utilizadas
 
