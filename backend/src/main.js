@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // uso de rutas predefinidas
-app.use('/crd', routes);
+app.use('/api/integrantes', routes);
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

@@ -32,3 +32,17 @@ INSERT INTO Puesto (nombre) VALUES
 ('Diseñador UX/UI'),
 ('Tester QA'),
 ('Project Manager');
+
+-- Insertar integrantes de ejemplo
+INSERT INTO Integrante (nombre, apellido, descripcion, foto_url)
+VALUES
+('Fiorela', 'Cristaldo', 'Desarrolladora full stack apasionada por React y Node.js', 'https://i.pravatar.cc/150?img=1'),
+('Lucas', 'Gómez', 'Backend developer especializado en APIs con Express y MySQL', 'https://i.pravatar.cc/150?img=2'),
+('Martina', 'Ríos', 'UX/UI designer enfocada en accesibilidad y experiencia de usuario', 'https://i.pravatar.cc/150?img=3');
+
+-- Asignar puestos a los integrantes
+INSERT INTO Integrante_Puesto (id_integrante, id_puesto)
+VALUES
+(1, 1),  -- Fiorela → Frontend Developer
+(2, 2),  -- Lucas → Backend Developer
+(3, 3);  -- Martina → UX/UI Designer
