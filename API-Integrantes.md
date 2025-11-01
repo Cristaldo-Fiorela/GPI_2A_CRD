@@ -103,7 +103,8 @@ Crea un nuevo integrante en la base de datos.
   "nombre": "María",
   "apellido": "Pérez",
   "descripcion": "Desarrolladora frontend con experiencia en Vue.js",
-  "foto_url": "https://i.pravatar.cc/150?img=5"
+  "foto_url": "https://i.pravatar.cc/150?img=5",
+  "puesto_id ": 1
 }
 ```
 
@@ -112,6 +113,8 @@ Crea un nuevo integrante en la base de datos.
 - `apellido` (string, **requerido**): Apellido del integrante
 - `descripcion` (string, opcional): Descripción o biografía del integrante
 - `foto_url` (string, opcional): URL de la foto de perfil
+- `puesto_id` (int): ID de puesto seleccionado de API Puestos
+
 
 **Respuesta exitosa (201):**
 ```json
