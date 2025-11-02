@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InnovaTech - Panel de Integrantes</title>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style3.css"/>
+</head>
+<body>
+  <!-- BARRA SUPERIOR  -->
+  <header class="barra-superior">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_placeholder.svg" alt="Logo InnovaTech">
+      <h1>InnovaTech</h1>
+    </div>
+    <div class="usuario">
+      <img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto de usuario" class="foto-usuario">
+      <span class="nombre-usuario">Jane Doe</span>
+    </div>
+  </header>
+
+  <!-- LAYOUT (SIDEBAR + CONTENIDO) -->
+  <div class="layout">
+    <!-- Barra lateral -->
+    <aside class="barra-lateral">
+      <nav class="menu">
+        <a href="#" class="menu-item activo">👥 Integrantes</a>
+        <a href="#" class="menu-item">💬 Mensajes</a>
+      </nav>
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="contenedor">
+      <main class="contenido">
+        <section class="tabla-integrantes tarjeta-neon">
+          <h2>Listado de Integrantes</h2>
+
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <!-- Importante: el cuerpo queda vacío y se renderiza desde JS con los datos de la API -->
+            <tbody id="cuerpo-tabla"></tbody>
+          </table>
+
+          <div class="contenedor-boton">
+            <button id="abrir-modal-nuevo" class="btn btn-primario">+ Nuevo Integrante</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODALES -->
+
+  <!-- Modal Eliminar -->
+  <div id="modal-eliminar" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Confirmar eliminación</h3>
+      <p>¿Seguro que querés eliminar a <strong id="nombre-a-eliminar"></strong>?</p>
+      <div class="modal-acciones">
+        <button class="btn btn-eliminar" id="confirmar-eliminar">Eliminar</button>
+        <button class="btn btn-editar" data-cerrar>Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar -->
+  <div id="modal-editar" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Editar integrante</h3>
+      <form id="form-editar" class="formulario">
+        <input type="text" id="editar-nombre" placeholder="Nombre" required>
+        <input type="email" id="editar-correo" placeholder="Correo" required>
+        <select id="editar-rol" required>
+          <option value="">Seleccionar rol</option>
+          <option>Developer</option>
+          <option>QA</option>
+          <option>UX</option>
+          <option>PM</option>
+        </select>
+        <div class="modal-acciones">
+          <button type="submit" class="btn btn-primario">Guardar cambios</button>
+          <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Integrante -->
+  <div id="modal-nuevo" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Nuevo integrante</h3>
+      <form id="form-nuevo" class="formulario">
+        <input type="text" id="nuevo-nombre" placeholder="Nombre" required>
+        <input type="email" id="nuevo-correo" placeholder="Correo" required>
+        <select id="nuevo-rol" required>
+          <option value="">Seleccionar rol</option>
+          <option>Developer</option>
+          <option>QA</option>
+          <option>UX</option>
+          <option>PM</option>
+        </select>
+        <div class="modal-acciones">
+          <button type="submit" class="btn btn-primario">Agregar</button>
+          <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  <script type="module" src="./js/main.js"></script>
+
+
+</body>
+</html>
