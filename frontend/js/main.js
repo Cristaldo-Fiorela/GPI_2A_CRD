@@ -59,7 +59,8 @@ function uiFilaHTML(i) {
   const rol   = i.Puesto || "Sin rol";
   const corr  = i.descripcion || "—";
 
-  const disabled = id ? "" : "disabled title='Sin id: no editable'";
+  // ⚠️ No usamos disabled (si no, no dispara click). Solo marcamos si no hay id.
+  const sinIdAttr = id ? "" : "data-sinid='1' title='Este registro no tiene ID desde la API'";
 
   return `
     <td><img src="${foto}" alt="Foto" class="avatar"></td>
@@ -67,8 +68,8 @@ function uiFilaHTML(i) {
     <td class="celda-rol">${rol}</td>
     <td class="celda-correo">${corr}</td>
     <td class="acciones">
-      <button class="btn btn-editar" data-accion="editar" data-id="${id ?? ""}" ${disabled}>Editar</button>
-      <button class="btn btn-eliminar" data-accion="eliminar" data-id="${id ?? ""}" ${disabled}>Eliminar</button>
+      <button class="btn btn-editar" data-accion="editar" data-id="${id ?? ""}" ${sinIdAttr}>Editar</button>
+      <button class="btn btn-eliminar" data-accion="eliminar" data-id="${id ?? ""}" ${sinIdAttr}>Eliminar</button>
     </td>
   `;
 }
@@ -115,7 +116,7 @@ async function cargarPuestos(selectElement) {
     })
 
   } catch (error) {
-    console.error("Error al cargar puestos:", err);
+    console.error("Error al cargar puestos:", error); // <-- corrige err → error
     // Mostrar mensaje de error en el select
     selectElement.innerHTML = '<option value="">Error al cargar roles</option>';
   }
@@ -170,3 +171,141 @@ formNuevo.addEventListener('submit', async (e) => {
 
 // cargarIntegrantes();
 document.addEventListener('DOMContentLoaded', cargarIntegrantes);
+
+/* ======= Estado para editar / eliminar ======= */
+let idSeleccionado = null;
+let datosSeleccionados = null;
+
+/* ======= Delegación de clicks en la tabla (Editar / Eliminar) ======= */
+cuerpoTabla.addEventListener("click", async (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  const accion = btn.dataset.accion;
+  const id = btn.dataset.id ? Number(btn.dataset.id) : null;
+  if (!accion) return;
+
+  // Tomo referencias visibles de la fila (para mostrar algo aunque no haya id)
+  const fila = btn.closest("tr");
+  const nombreTexto = fila?.querySelector(".celda-nombre")?.textContent?.trim() || "";
+  const descripcionTexto = fila?.querySelector(".celda-correo")?.textContent?.trim() || "—";
+  const [nombreSel = "", ...restoApellido] = nombreTexto.split(" ");
+  const apellidoSel = restoApellido.join(" ").trim();
+
+  if (accion === "editar") {
+    // Abrimos SIEMPRE el modal (aunque no haya id)
+    abrir("modal-editar");
+
+    // Limpiamos mensajes y cargamos roles en el select del modal Editar
+    const errorEditar = document.getElementById("error-msg-editar");
+    if (errorEditar) { errorEditar.textContent = ""; errorEditar.style.display = "none"; }
+
+    await cargarPuestos(editarRol);
+
+    if (!id) {
+      // Sin id: prellenamos con lo visible y avisamos que no se podrá guardar
+      if (editarNombre) editarNombre.value = nombreSel;
+      const editarApellido = document.getElementById("editar-apellido");
+      if (editarApellido) editarApellido.value = apellidoSel;
+      if (editarCorreo) editarCorreo.value = ""; // no lo tenemos en la tabla
+      const editarDescripcion = document.getElementById("editar-descripcion");
+      if (editarDescripcion) editarDescripcion.value = descripcionTexto;
+
+      if (errorEditar) {
+        errorEditar.textContent = "Este integrante no tiene ID desde la API. Podés editar los campos, pero no se puede guardar.";
+        errorEditar.style.display = "block";
+      }
+      idSeleccionado = null;
+      return;
+    }
+
+    // Con id: precargamos con la API
+    try {
+      idSeleccionado = id;
+      const data = await integrantesService.getById(idSeleccionado);
+      const integrante = Array.isArray(data) ? data[0] : data;
+
+      const editarApellido = document.getElementById("editar-apellido");
+      const editarDescripcion = document.getElementById("editar-descripcion");
+
+      if (editarNombre) editarNombre.value = (integrante?.nombre ?? "").trim();
+      if (editarApellido) editarApellido.value = (integrante?.apellido ?? "").trim();
+      if (editarCorreo) editarCorreo.value = (integrante?.correo ?? "").trim();
+      if (editarDescripcion) editarDescripcion.value = (integrante?.descripcion ?? "").trim();
+
+      // Intento setear rol por id si viene
+      const pid = integrante?.puesto_id ?? integrante?.id_puesto ?? null;
+      if (editarRol && pid != null) editarRol.value = String(pid);
+    } catch (err) {
+      console.error("No se pudo precargar el integrante:", err);
+    }
+  }
+
+  if (accion === "eliminar") {
+    // Abrimos SIEMPRE el modal
+    abrir("modal-eliminar");
+
+    // Texto del modal
+    if (nombreAEliminar) nombreAEliminar.textContent = nombreTexto || (id ? `ID ${id}` : "Sin ID");
+
+    // Guardamos contexto para confirmar
+    idSeleccionado = id; // puede ser null
+    datosSeleccionados = { nombre: nombreSel, apellido: apellidoSel };
+
+    // En tu service, si no hay id usa nombre+apellido en el body del DELETE.
+    // Por eso habilitamos el botón siempre.
+    if (confirmarEliminarBtn) confirmarEliminarBtn.disabled = false;
+  }
+});
+
+/* ======= Guardar cambios (EDITAR) ======= */
+formEditar.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const errorEditar = document.getElementById("error-msg-editar");
+  if (errorEditar) { errorEditar.textContent = ""; errorEditar.style.display = "none"; }
+
+  if (!idSeleccionado) {
+    if (errorEditar) {
+      errorEditar.textContent = "No se puede guardar porque este integrante no tiene ID expuesto por la API.";
+      errorEditar.style.display = "block";
+    }
+    return;
+  }
+
+  // Tomo valores del modal Editar
+  const editarApellido = document.getElementById("editar-apellido");
+  const editarDescripcion = document.getElementById("editar-descripcion");
+
+  const cambios = {
+    nombre: (editarNombre?.value || "").trim(),
+    apellido: (editarApellido?.value || "").trim(),
+    correo: (editarCorreo?.value || "").trim(),         // si tu API lo ignora, no pasa nada
+    descripcion: (editarDescripcion?.value || "").trim(),
+    puesto_id: (editarRol?.value || "").trim(),
+  };
+
+  try {
+    await integrantesService.updateIntegrante(idSeleccionado, cambios);
+    cerrar("modal-editar");
+    await cargarIntegrantes();
+  } catch (error) {
+    console.error("Error al actualizar integrante", error);
+    if (errorEditar) {
+      errorEditar.textContent = error.message || "Error al actualizar el integrante";
+      errorEditar.style.display = "block";
+    }
+  }
+});
+
+/* ======= Confirmar (ELIMINAR) ======= */
+confirmarEliminarBtn.addEventListener("click", async () => {
+  try {
+    await integrantesService.deleteIntegrante(idSeleccionado, datosSeleccionados);
+    cerrar("modal-eliminar");
+    await cargarIntegrantes();
+  } catch (error) {
+    console.error("Error al eliminar", error);
+    alert(error.message || "No se pudo eliminar");
+  }
+});
