@@ -20,8 +20,14 @@ const editarRol    = document.getElementById("editar-rol");
 
 // Inputs NUEVO
 const nuevoNombre = document.getElementById("nuevo-nombre");
+const nuevoApellido   = document.getElementById("nuevo-apellido");
 const nuevoCorreo = document.getElementById("nuevo-correo");
 const nuevoRol    = document.getElementById("nuevo-rol");
+const nuevoDescripcion = document.getElementById("nuevo-descripcion");
+const nuevoIMG = document.getElementById("nuevo-img");
+
+// ERRORES
+const errorMsg = document.getElementById('error-msg');
 
 // Botones
 const abrirModalNuevoBtn  = document.getElementById("abrir-modal-nuevo");
@@ -116,15 +122,51 @@ async function cargarPuestos(selectElement) {
 }
 
 /* ======= ABRIR MODAL NUEVO ======= */
-document.getElementById("abrir-modal-nuevo")
-  .addEventListener("click", async () => {
+abrirModalNuevoBtn.addEventListener("click", async () => {
     abrir("modal-nuevo");
     // Cargar puestos cuando se abre el modal
+
+    // Limpiar mensaje de error al abrir
+    errorMsg.textContent = '';
+    errorMsg.style.display = 'none';
+
     await cargarPuestos(nuevoRol);
   });
 
 /* ======= NUEVO INTEGRANTE ======= */
+formNuevo.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  // limpiar mensaje de error
+  errorMsg.textContent = '';
+  errorMsg.style.display = 'none';
 
+  // datos de inputs
+  const nuevoIntegrante = {
+    nombre: nuevoNombre.value.trim(),
+    apellido: nuevoApellido.value.trim(),
+    correo: nuevoCorreo.value.trim(),
+    puesto_id: nuevoRol.value.trim(),
+    foto_url: nuevoIMG.value.trim() || '',
+    descripcion: nuevoDescripcion.value.trim() || '',
+  }
+
+  try {
+    const resultado =  await integrantesService.createIntegrante(nuevoIntegrante);
+    console.log('Integrante creado con exito: ', resultado);
+
+    // limpia el form
+    formNuevo.reset();
+    cerrar("modal-nuevo");
+
+    // recargar tabla de integrantes
+    await cargarIntegrantes();
+  } catch (error) {
+    console.error('Error al crear integrante', error);    
+    errorMsg.textContent = error.message || 'Error al crear el integrante';
+    errorMsg.style.display = 'block';
+  }
+});
 
 // cargarIntegrantes();
 document.addEventListener('DOMContentLoaded', cargarIntegrantes);

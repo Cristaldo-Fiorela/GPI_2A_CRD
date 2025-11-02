@@ -101,10 +101,14 @@
       <h3>Nuevo integrante</h3>
       <form id="form-nuevo" class="formulario">
         <input type="text" id="nuevo-nombre" placeholder="Nombre" required>
+        <input type="text" id="nuevo-apellido" placeholder="Apellido" required>
         <input type="email" id="nuevo-correo" placeholder="Correo" required>
+        <input type="text" id="nuevo-descripcion" placeholder="Descripcion">
         <select id="nuevo-rol" required>
           <option disabled selected value="">Seleccionar rol</option>
         </select>
+        <input type="text" id="nuevo-img" placeholder="IMG Url">
+        <p id="error-msg"></p>
         <div class="modal-acciones">
           <button type="submit" class="btn btn-primario">Agregar</button>
           <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>

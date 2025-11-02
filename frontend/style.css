@@ -153,6 +153,11 @@ body{
   background:linear-gradient(#0f2132,#0f2132) padding-box,
              linear-gradient(135deg, rgba(44,130,213,.75), rgba(150,188,224,.35)) border-box;
 }
+.btn-primario:hover {
+  background: linear-gradient(#112417, #11241a) padding-box,
+              linear-gradient(135deg, rgba(34, 197, 94, .65), rgba(134, 239, 172, .25)) border-box;
+  border: 1px solid rgba(34, 197, 94, .45);
+}
 .btn-editar{
   background:linear-gradient(#0f2132,#0f2132) padding-box,
              linear-gradient(135deg, rgba(150,188,224,.45), rgba(44,130,213,.45)) border-box;
@@ -196,6 +201,18 @@ body{
   border-radius:10px; padding:10px 12px; font-size: .95rem;
 }
 .formulario input::placeholder{ color:#a9c0d6; }
+
+#error-msg {
+  display: none; /* Oculto por defecto */
+  color: #e43b3b;
+  background: rgba(228, 59, 59, 0.1);
+  border: 1px solid rgba(228, 59, 59, 0.3);
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 14px;
+  text-align: center;
+}
 
 /* Responsive  */
 @media (max-width: 900px){
