@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InnovaTech - Panel de Integrantes</title>
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- BARRA SUPERIOR  -->
+  <!-- BARRA SUPERIOR -->
   <header class="barra-superior">
     <div class="logo">
       <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_placeholder.svg" alt="Logo InnovaTech">
@@ -26,7 +25,6 @@
     <aside class="barra-lateral">
       <nav class="menu">
         <a href="#" class="menu-item activo">👥 Integrantes</a>
-        <a href="#" class="menu-item">💬 Mensajes</a>
       </nav>
     </aside>
 
@@ -42,12 +40,11 @@
                 <th>Foto</th>
                 <th>Nombre</th>
                 <th>Rol</th>
-                <th>Correo</th>
+                <th>Descripción</th>
                 <th>Acciones</th>
               </tr>
             </thead>
-
-            <!-- Importante: el cuerpo queda vacío y se renderiza desde JS con los datos de la API -->
+            <!-- El cuerpo se completa desde JS con datos de la API -->
             <tbody id="cuerpo-tabla"></tbody>
           </table>
 
@@ -59,34 +56,34 @@
     </div>
   </div>
 
-  <!-- MODALES -->
+  <!-- ========== MODALES ========== -->
 
   <!-- Modal Eliminar -->
-  <div id="modal-eliminar" class="modal" aria-hidden="true">
-    <div class="modal-contenido">
-      <h3>Confirmar eliminación</h3>
+  <div id="modal-eliminar" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-eliminar" aria-hidden="true">
+    <div class="modal-contenido" tabindex="-1">
+      <h3 id="titulo-modal-eliminar">Confirmar eliminación</h3>
       <p>¿Seguro que querés eliminar a <strong id="nombre-a-eliminar"></strong>?</p>
       <div class="modal-acciones">
         <button class="btn btn-eliminar" id="confirmar-eliminar">Eliminar</button>
-        <button class="btn btn-editar" data-cerrar>Cancelar</button>
+        <button class="btn btn-editar" type="button" data-cerrar>Cancelar</button>
       </div>
     </div>
   </div>
 
   <!-- Modal Editar -->
-  <div id="modal-editar" class="modal" aria-hidden="true">
-    <div class="modal-contenido">
-      <h3>Editar integrante</h3>
-      <form id="form-editar" class="formulario">
+  <div id="modal-editar" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-editar" aria-hidden="true">
+    <div class="modal-contenido" tabindex="-1">
+      <h3 id="titulo-modal-editar">Editar integrante</h3>
+      <form id="form-editar" class="formulario" novalidate>
         <input type="text" id="editar-nombre" placeholder="Nombre" required>
+        <input type="text" id="editar-apellido" placeholder="Apellido" required>
         <input type="email" id="editar-correo" placeholder="Correo" required>
+        <input type="text" id="editar-descripcion" placeholder="Descripción">
         <select id="editar-rol" required>
-          <option value="">Seleccionar rol</option>
-          <option>Developer</option>
-          <option>QA</option>
-          <option>UX</option>
-          <option>PM</option>
+          <option value="" disabled selected>Seleccionar rol</option>
+          <!-- opciones cargadas dinámicamente desde apiPuestos -->
         </select>
+        <p id="error-msg-editar" class="msg-error" aria-live="polite"></p>
         <div class="modal-acciones">
           <button type="submit" class="btn btn-primario">Guardar cambios</button>
           <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
@@ -96,19 +93,20 @@
   </div>
 
   <!-- Modal Nuevo Integrante -->
-  <div id="modal-nuevo" class="modal" aria-hidden="true">
-    <div class="modal-contenido">
-      <h3>Nuevo integrante</h3>
-      <form id="form-nuevo" class="formulario">
+  <div id="modal-nuevo" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-nuevo" aria-hidden="true">
+    <div class="modal-contenido" tabindex="-1">
+      <h3 id="titulo-modal-nuevo">Nuevo integrante</h3>
+      <form id="form-nuevo" class="formulario" novalidate>
         <input type="text" id="nuevo-nombre" placeholder="Nombre" required>
         <input type="text" id="nuevo-apellido" placeholder="Apellido" required>
         <input type="email" id="nuevo-correo" placeholder="Correo" required>
-        <input type="text" id="nuevo-descripcion" placeholder="Descripcion">
+        <input type="text" id="nuevo-descripcion" placeholder="Descripción">
         <select id="nuevo-rol" required>
           <option disabled selected value="">Seleccionar rol</option>
+          <!-- opciones cargadas dinámicamente desde apiPuestos -->
         </select>
         <input type="text" id="nuevo-img" placeholder="IMG Url">
-        <p id="error-msg"></p>
+        <p id="error-msg" class="msg-error" aria-live="polite"></p>
         <div class="modal-acciones">
           <button type="submit" class="btn btn-primario">Agregar</button>
           <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
@@ -117,9 +115,9 @@
     </div>
   </div>
 
-  
+  <!-- Scripts -->
   <script type="module" src="./js/main.js"></script>
-
-
 </body>
 </html>
+
+
