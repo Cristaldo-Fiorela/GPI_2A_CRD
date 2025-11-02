@@ -38,6 +38,7 @@ router.post('/', (req, res) => {
 router.get('/',(req,res)=>{
   const sql = `
   SELECT 
+    i.id,
     i.nombre,
     i.apellido,
     i.descripcion,
