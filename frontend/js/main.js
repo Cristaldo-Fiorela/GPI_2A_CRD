@@ -66,13 +66,23 @@ function uiFilaHTML(i) {
   `;
 }
 
+function renderizarIntegrantes(integrantes) {
+  cuerpoTabla.innerHTML = "";
+  integrantes.forEach((i) => {
+    const tr = document.createElement("tr");
+    if (i.id != null) tr.dataset.id = i.id;
+    tr.innerHTML = uiFilaHTML(i);
+    cuerpoTabla.appendChild(tr);
+  });
+}
+
+/* ======= Carga inicial ======= */
 async function cargarIntegrantes() {
   try {
     const integrantes = await integrantesService.getAll();
-    console.log(integrantes);
-    // Renderizar en el DOM
-  } catch (error) {
-    console.error('Error al cargar integrantes:', error);
+    renderizarIntegrantes(integrantes);
+  } catch (err) {
+    console.error("Error al cargar integrantes:", err);
   }
 }
 
