@@ -4,20 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InnovaTech - Panel de Integrantes</title>
-  <link rel="stylesheet" href="./style.css"/>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+  <!-- BARRA SUPERIOR  -->
   <header class="barra-superior">
     <div class="logo">
-      <img src="#" alt="Logo InnovaTech">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Logo_placeholder.svg" alt="Logo InnovaTech">
       <h1>InnovaTech</h1>
     </div>
     <div class="usuario">
-      <img src="#" alt="Foto de usuario" class="foto-usuario">
+      <img src="https://i.ibb.co/jrZ8D2d/profile.png" alt="Foto de usuario" class="foto-usuario">
       <span class="nombre-usuario">Jane Doe</span>
     </div>
   </header>
+
+  <!-- LAYOUT (SIDEBAR + CONTENIDO) -->
   <div class="layout">
+    <!-- Barra lateral -->
     <aside class="barra-lateral">
       <nav class="menu">
         <a href="#" class="menu-item activo">👥 Integrantes</a>
@@ -25,6 +30,7 @@
       </nav>
     </aside>
 
+    <!-- Contenido principal -->
     <div class="contenedor">
       <main class="contenido">
         <section class="tabla-integrantes tarjeta-neon">
@@ -35,49 +41,85 @@
               <tr>
                 <th>Foto</th>
                 <th>Nombre</th>
+                <th>Rol</th>
                 <th>Correo</th>
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><img src="#" alt="Foto" class="avatar"></td>
-                <td>Jane Doe</td>
-                <td>jane.doe@innovatech.com</td>
-                <td class="acciones">
-                  <button class="btn btn-editar">Editar</button>
-                  <button class="btn btn-eliminar">Eliminar</button>
-                </td>
-              </tr>
-              <tr>
-                <td><img src="#" alt="Foto" class="avatar"></td>
-                <td>John Smith</td>
-                <td>john.smith@innovatech.com</td>
-                <td class="acciones">
-                  <button class="btn btn-editar">Editar</button>
-                  <button class="btn btn-eliminar">Eliminar</button>
-                </td>
-              </tr>
-              <tr>
-                <td><img src="#" alt="Foto" class="avatar"></td>
-                <td>Alice Johnson</td>
-                <td>alice.johnson@innovatech.com</td>
-                <td class="acciones">
-                  <button class="btn btn-editar">Editar</button>
-                  <button class="btn btn-eliminar">Eliminar</button>
-                </td>
-              </tr>
-            </tbody>
+
+            <!-- Importante: el cuerpo queda vacío y se renderiza desde JS con los datos de la API -->
+            <tbody id="cuerpo-tabla"></tbody>
           </table>
 
           <div class="contenedor-boton">
-            <button class="btn btn-primario">+ Nuevo Integrante</button>
+            <button id="abrir-modal-nuevo" class="btn btn-primario">+ Nuevo Integrante</button>
           </div>
         </section>
       </main>
     </div>
   </div>
 
+  <!-- MODALES -->
+
+  <!-- Modal Eliminar -->
+  <div id="modal-eliminar" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Confirmar eliminación</h3>
+      <p>¿Seguro que querés eliminar a <strong id="nombre-a-eliminar"></strong>?</p>
+      <div class="modal-acciones">
+        <button class="btn btn-eliminar" id="confirmar-eliminar">Eliminar</button>
+        <button class="btn btn-editar" data-cerrar>Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar -->
+  <div id="modal-editar" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Editar integrante</h3>
+      <form id="form-editar" class="formulario">
+        <input type="text" id="editar-nombre" placeholder="Nombre" required>
+        <input type="email" id="editar-correo" placeholder="Correo" required>
+        <select id="editar-rol" required>
+          <option value="">Seleccionar rol</option>
+          <option>Developer</option>
+          <option>QA</option>
+          <option>UX</option>
+          <option>PM</option>
+        </select>
+        <div class="modal-acciones">
+          <button type="submit" class="btn btn-primario">Guardar cambios</button>
+          <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Integrante -->
+  <div id="modal-nuevo" class="modal" aria-hidden="true">
+    <div class="modal-contenido">
+      <h3>Nuevo integrante</h3>
+      <form id="form-nuevo" class="formulario">
+        <input type="text" id="nuevo-nombre" placeholder="Nombre" required>
+        <input type="text" id="nuevo-apellido" placeholder="Apellido" required>
+        <input type="email" id="nuevo-correo" placeholder="Correo" required>
+        <input type="text" id="nuevo-descripcion" placeholder="Descripcion">
+        <select id="nuevo-rol" required>
+          <option disabled selected value="">Seleccionar rol</option>
+        </select>
+        <input type="text" id="nuevo-img" placeholder="IMG Url">
+        <p id="error-msg"></p>
+        <div class="modal-acciones">
+          <button type="submit" class="btn btn-primario">Agregar</button>
+          <button type="button" class="btn btn-editar" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
   <script type="module" src="./js/main.js"></script>
+
+
 </body>
 </html>
