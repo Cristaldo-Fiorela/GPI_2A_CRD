@@ -68,7 +68,7 @@ router.get('/',(req,res)=>{
 //READ integrantes por ID
 router.get('/:id',(req,res)=>{
   const {id}=req.params
-  const sql=`SELECT i.nombre,i.apellido,i.descripcion,i.foto_url,i.fecha_registro,GROUP_CONCAT(p.nombre SEPARATOR ',') AS Puesto FROM Integrante i INNER JOIN Integrante_Puesto ip ON i.id=ip.id_integrante INNER JOIN Puesto p ON ip.id_puesto = p.id WHERE i.id= ${id} GROUP BY i.id`;
+  const sql=`SELECT i.id, i.nombre,i.apellido,i.descripcion,i.foto_url,i.fecha_registro,GROUP_CONCAT(p.nombre SEPARATOR ',') AS Puesto FROM Integrante i INNER JOIN Integrante_Puesto ip ON i.id=ip.id_integrante INNER JOIN Puesto p ON ip.id_puesto = p.id WHERE i.id= ${id} GROUP BY i.id`;
 
   db.query(sql,(error,results)=>{
     // Si hay un error, lo enviamos con un status 500 y usamos 'return' para salir.
