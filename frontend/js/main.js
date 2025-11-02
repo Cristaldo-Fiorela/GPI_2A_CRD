@@ -1,4 +1,5 @@
 import { integrantesService } from './services/integrantesService.js';
+import { puestosService } from './services/puestosService.js';
 
 /* ======= Referencias de DOM ======= */
 const cuerpoTabla = document.getElementById("cuerpo-tabla");
@@ -85,6 +86,45 @@ async function cargarIntegrantes() {
     console.error("Error al cargar integrantes:", err);
   }
 }
+
+/* ======= CARGAR PUESTOS ======= */
+async function cargarPuestos(selectElement) {
+  try {
+    const puestos = await puestosService.getAllPuestos();
+    
+    // limpieza de opciones menos la primera que es de default
+    selectElement.innerHTML = '<option value="" disabled selected>Seleccionar rol</option>';
+
+    // mapeo de puestos y creacion de cada opcion
+    puestos.forEach(puesto => {
+      // elemento HTML
+      const opcion = document.createElement('option');
+
+      // datos a llenar el elemento
+      opcion.value = puesto.id;
+      opcion.textContent = puesto.nombre;
+
+      // insersion de datos en elemento creado
+      selectElement.appendChild(opcion);
+    })
+
+  } catch (error) {
+    console.error("Error al cargar puestos:", err);
+    // Mostrar mensaje de error en el select
+    selectElement.innerHTML = '<option value="">Error al cargar roles</option>';
+  }
+}
+
+/* ======= ABRIR MODAL NUEVO ======= */
+document.getElementById("abrir-modal-nuevo")
+  .addEventListener("click", async () => {
+    abrir("modal-nuevo");
+    // Cargar puestos cuando se abre el modal
+    await cargarPuestos(nuevoRol);
+  });
+
+/* ======= NUEVO INTEGRANTE ======= */
+
 
 // cargarIntegrantes();
 document.addEventListener('DOMContentLoaded', cargarIntegrantes);

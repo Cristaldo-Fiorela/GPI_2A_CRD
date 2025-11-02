@@ -40,5 +40,26 @@ export const integrantesService = {
     }
   },
 
-  // get de integrantes por ID, delete, post. get de puestos. 
+  createIntegrante: async (nuevoIntegrante) => {
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevoIntegrante)
+      })
+
+      const data = await response.json();
+
+      if(!response.ok) {
+        throw new Error(data.error || 'Error al crear integrante.')
+      }
+
+      return data;
+    } catch (error) {
+      console.log('Error en crearIntegrante', error);
+      throw error;
+    }
+  } 
 }
