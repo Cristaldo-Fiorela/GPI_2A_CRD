@@ -6,6 +6,7 @@ Esta rama contiene la documentación técnica del proyecto **GPI_2A_CRD**.
 ## 📖 Contenido de la Documentación
 
 - **API de Integrantes**: Documentación completa de los endpoints para gestionar integrantes del equipo
+- **Instalacion DB**: Documentación completa de instalacion de DB para entorno de trabajo
 - *(Se irán agregando más documentos según avance el proyecto)*
 
 ---
