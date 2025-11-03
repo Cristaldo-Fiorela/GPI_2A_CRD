@@ -39,7 +39,21 @@ export const integrantesService = {
       // Ejemplo: el componente que usa getAll() puede mostrar un mensaje al usuario
     }
   },
+  getOneIntegrante: async(id) => {
+    try {
+      const response =  await fetch(`${API_URL}/${id}`);
 
+      if(!response.ok) {
+        throw new Error(data.error || 'Error al obtener integrante.')
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log('Error al getOneIntegrante', error);
+      throw error;
+    }
+  },
   createIntegrante: async (nuevoIntegrante) => {
     try {
       const response = await fetch(API_URL, {
@@ -61,5 +75,26 @@ export const integrantesService = {
       console.log('Error en crearIntegrante', error);
       throw error;
     }
-  } 
+  },
+  editarIntegrante: async (integrante) => {
+    const { id } = integrante;
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(integrante),
+      })
+
+      if(!response.ok) {
+        throw new Error('Error al actualizar integrante');
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.log('Error en editarIntegrante', err);
+      throw err;
+    }
+  }
 }
