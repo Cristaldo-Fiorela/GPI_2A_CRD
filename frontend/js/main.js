@@ -15,8 +15,10 @@ const formEditar = document.getElementById("form-editar");
 
 // Inputs EDITAR
 const editarNombre = document.getElementById("editar-nombre");
-const editarCorreo = document.getElementById("editar-correo");
+const editarApellido = document.getElementById("editar-apellido");
 const editarRol    = document.getElementById("editar-rol");
+const editarDescripcion = document.getElementById("editar-descripcion");
+const editarIMG = document.getElementById("editar-img");
 
 // Inputs NUEVO
 const nuevoNombre = document.getElementById("nuevo-nombre");
@@ -164,6 +166,95 @@ formNuevo.addEventListener('submit', async (e) => {
   } catch (error) {
     console.error('Error al crear integrante', error);    
     errorMsg.textContent = error.message || 'Error al crear el integrante';
+    errorMsg.style.display = 'block';
+  }
+});
+
+/* ======= Estado para editar / eliminar ======= */
+
+/* ======= EDITAR INTEGRANTE ======= */
+
+// Var para guardar el ID del integrante que estamos editando
+let integranteEditandoId = null;
+
+// Delegación de eventos para los botones de editar
+cuerpoTabla.addEventListener('click', async (e) => {
+  const btnEditar = e.target.closest('[data-accion="editar"]');
+  
+  if (btnEditar) {
+    const idElem = btnEditar.dataset.id;
+    if (!idElem) return;
+    errorMsg.textContent = '';
+    errorMsg.style.display = 'none';
+    
+    try {
+      // Obtener datos del integrante
+      const integrante = await integrantesService.getOneIntegrante(idElem);
+      console.log('Integrante obtenido:', integrante);
+      
+      // Guardar el ID que estamos editando
+      integranteEditandoId = integrante.id;
+      
+      // Cargar puestos en el select PRIMERO
+      await cargarPuestos(editarRol);
+      
+      // Llenar el formulario con los datos actuales
+      editarNombre.value = integrante.nombre || '';
+      editarApellido.value = integrante.apellido || '';
+      editarDescripcion.value = integrante.descripcion || '';
+      editarIMG.value = integrante.foto_url || '';
+
+      // Seleccionar el puesto actual
+      if (integrante.puestos && integrante.puestos.length > 0) {
+        editarRol.value = integrante.puestos[0];
+      }
+      
+      // Abrir modal
+      abrir("modal-editar");
+      
+    } catch (error) {
+      console.error('Error al cargar integrante:', error);
+      errorMsg.textContent = error.message || 'Error al cargar los datos del integrante';
+      errorMsg.style.display = 'block';
+    }
+  }
+});
+
+// Submit del formulario de editar
+formEditar.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  errorMsg.textContent = '';
+  errorMsg.style.display = 'none';
+  
+  if (!integranteEditandoId) {
+    alert('Error: No hay integrante seleccionado');
+    return;
+  }
+
+  const integranteActualizado = {
+    id: integranteEditandoId,
+    nombre: editarNombre.value.trim(),
+    apellido: editarApellido.value.trim(),
+    descripcion: editarDescripcion.value.trim(),
+    foto_url: editarIMG.value.trim(),
+    puestos: editarRol.value ? [parseInt(editarRol.value)] : []
+  };
+  
+  try {
+    await integrantesService.editarIntegrante(integranteActualizado);
+    
+    // Limpiar y cerrar
+    formEditar.reset();
+    integranteEditandoId = null;
+    cerrar("modal-editar");
+    
+    // Recargar tabla
+    await cargarIntegrantes();
+    
+  } catch (error) {
+    console.error('Error al actualizar integrante:', error);
+    errorMsg.textContent = error.message || 'Error al actualizar el integrante';
     errorMsg.style.display = 'block';
   }
 });
