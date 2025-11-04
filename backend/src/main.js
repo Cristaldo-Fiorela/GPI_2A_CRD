@@ -5,7 +5,8 @@ const express = require('express');
 // permite comunicacion entre back y front
 const cors = require('cors');
 // endpoints
-const routes = require('./routes/integrantes');
+const integrantesRoutes = require('./routes/integrantes');
+const puestosRoutes = require('./routes/puestos');
 
 const app = express();
 const port = 3000;
@@ -14,7 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 // uso de rutas predefinidas
-app.use('/crd', routes);
+app.use('/api/integrantes', integrantesRoutes);
+app.use('/api/puestos', puestosRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);

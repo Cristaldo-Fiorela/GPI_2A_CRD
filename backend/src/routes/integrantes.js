@@ -10,8 +10,7 @@ const connection = require('../config/db');
 
 // Crear un integrante
 router.post('/', (req, res) => {
-  const { nombre, apellido, descripcion, foto_url } = req.body;
-
+  const { nombre, apellido, descripcion, foto_url,puesto_id } = req.body;
   if (!nombre || !apellido) {
     return res.status(400).json({ error: 'Nombre y apellido son obligatorios' });
   }
@@ -22,13 +21,35 @@ router.post('/', (req, res) => {
       console.error('Error al insertar integrante:', err);
       return res.status(500).json({ error: 'Error al insertar integrante' });
     }
-    res.status(201).json({ message: 'Integrante creado correctamente', id: result.insertId });
+    const integranteId = result.insertId;
+    const sql2 = 'INSERT INTO Integrante_Puesto (id_integrante, id_puesto) VALUES (?, ?)';
+     db.query(sql2, [integranteId, puesto_id], (err, result) => {
+    if (err) { 
+      console.error('Error  al insertar puesto:', err);
+      return res.status(500).json({ error: 'Error al crear el puesto' });
+    }
+    res.status(201).json({ message: 'Integrante creado correctamente', id: integranteId });
   });
+  });
+  
 });
 
-//READ integrantes
+//READ integrantesd
 router.get('/',(req,res)=>{
-  const sql=`SELECT i.nombre,i.apellido,i.descripcion,i.foto_url,i.fecha_registro,GROUP_CONCAT(p.nombre SEPARATOR ",") AS Puesto FROM Integrante i INNER JOIN Integrante_Puesto ip ON i.id=ip.id_integrante INNER JOIN Puesto p ON ip.id_puesto = p.id GROUP BY i.id`;
+  const sql = `
+  SELECT 
+    i.id,
+    i.nombre,
+    i.apellido,
+    i.descripcion,
+    i.foto_url,
+    i.fecha_registro,
+    GROUP_CONCAT(p.nombre SEPARATOR ", ") AS puesto
+  FROM Integrante i
+  LEFT JOIN Integrante_Puesto ip ON i.id = ip.id_integrante
+  LEFT JOIN Puesto p ON ip.id_puesto = p.id
+  GROUP BY i.id
+`;
 
   db.query(sql,(error,results)=>{
     // Si hay un error, lo enviamos con un status 500 y usamos 'return' para salir.
@@ -47,7 +68,17 @@ router.get('/',(req,res)=>{
 //READ integrantes por ID
 router.get('/:id',(req,res)=>{
   const {id}=req.params
-  const sql=`SELECT i.nombre,i.apellido,i.descripcion,i.foto_url,i.fecha_registro,GROUP_CONCAT(p.nombre SEPARATOR ',') AS Puesto FROM Integrante i INNER JOIN Integrante_Puesto ip ON i.id=ip.id_integrante INNER JOIN Puesto p ON ip.id_puesto = p.id WHERE i.id= ${id} GROUP BY i.id`;
+  const sql=`SELECT 
+      i.id, i.nombre,
+      i.apellido,
+      i.descripcion,
+      i.foto_url,
+      i.fecha_registro,
+      GROUP_CONCAT(ip.id_puesto) AS puestos
+    FROM Integrante i 
+    LEFT JOIN Integrante_Puesto ip ON i.id = ip.id_integrante 
+    WHERE i.id= ${id} 
+    GROUP BY i.id`;
 
   db.query(sql,(error,results)=>{
     // Si hay un error, lo enviamos con un status 500 y usamos 'return' para salir.
@@ -56,12 +87,20 @@ router.get('/:id',(req,res)=>{
             return res.status(500).json({ error: 'Error interno del servidor al consultar la base de datos.' });
         }
     if(results.length>0){
-      res.json(results);
+      const integrante = results[0]; // objeto, no array
+
+      // Convertir puestos de string "1,2,3" a array [1, 2, 3]
+      if (integrante.puestos) {
+        integrante.puestos = integrante.puestos.split(',').map(Number);
+      } else {
+        integrante.puestos = [];
+      }
+      
+      res.json(integrante);
     }else{
      res.status(404).send('No se encontraron integrantes.');
     }
   })
-  
 });
 
 //UPDATE Integrantes 
