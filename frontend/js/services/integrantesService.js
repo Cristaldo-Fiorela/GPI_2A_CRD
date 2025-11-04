@@ -96,5 +96,25 @@ export const integrantesService = {
       console.log('Error en editarIntegrante', err);
       throw err;
     }
+  },
+      eliminarIntegrante: async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+
+      // Si tu backend responde 204 sin body, evitamos romper .json()
+      let data = {};
+      try { data = await response.json(); } catch {}
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Error al eliminar integrante.');
+      }
+      return data;
+    } catch (error) {
+      console.log('Error en eliminarIntegrante', error);
+      throw error;
+    }
   }
-}
+
+
+};
+

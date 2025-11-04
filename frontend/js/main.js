@@ -258,6 +258,53 @@ formEditar.addEventListener('submit', async (e) => {
     errorMsg.style.display = 'block';
   }
 });
+// Var para guardar el ID del integrante que vamos a eliminar
+let integranteEliminandoId = null;
+cuerpoTabla.addEventListener('click', async (e) => {
+  const btnEliminar = e.target.closest('[data-accion="eliminar"]');
+  if (!btnEliminar) return;
+
+  const id = btnEliminar.dataset.id;
+  if (!id) return;
+
+  // guardamos el id a eliminar
+  integranteEliminandoId = id;
+
+  // mostramos el nombre en el modal (tomado de la fila)
+  const fila = btnEliminar.closest('tr');
+  const nombre = fila?.querySelector('.celda-nombre')?.textContent?.trim() || 'este integrante';
+  nombreAEliminar.textContent = nombre;
+
+  // abrir modal
+  abrir('modal-eliminar');
+});
+confirmarEliminarBtn.addEventListener('click', async () => {
+  if (!integranteEliminandoId) return;
+
+  try {
+    await integrantesService.eliminarIntegrante(integranteEliminandoId);
+
+    // limpiar estado y cerrar
+    integranteEliminandoId = null;
+    cerrar('modal-eliminar');
+
+    // recargar tabla
+    await cargarIntegrantes();
+  } catch (error) {
+    console.error('Error al eliminar integrante:', error);
+    alert(error?.message || 'No se pudo eliminar el integrante');
+  }
+});
+
+// Si se cierra el modal por "Cancelar" o clic afuera, limpiamos el estado
+document.querySelectorAll('#modal-eliminar [data-cerrar], #modal-eliminar').forEach((el) => {
+  el.addEventListener('click', (e) => {
+    // si es el overlay o el botón cancelar
+    if (e.target === el || e.target.hasAttribute('data-cerrar')) {
+      integranteEliminandoId = null;
+    }
+  });
+});
 
 // cargarIntegrantes();
 document.addEventListener('DOMContentLoaded', cargarIntegrantes);
